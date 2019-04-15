@@ -1,0 +1,12 @@
+Package: rminiconda
+Title: Maintain Isolated "miniconda" Python Installation
+Version: 0.0.0.9000
+Authors@R:
+    person(given = "Ryan",
+           family = "Hafen",
+           role = c("aut", "cre"),
+           email = "rhafen@gmail.com")
+Description: This package provides utilities for installing an isolated "miniconda" Python environment. It is intended mainly for use with the reticulate package, with the particular use case of allowing R users to use R packages that wrap Python libraries without having to worry about maintaining a Python environment.
+License: Apache License 2.0 | file LICENSE
+Encoding: UTF-8
+LazyData: true
