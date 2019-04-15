@@ -4,6 +4,7 @@
 #'
 #' @param version The major version number of Python (2 or 3). The latest version of the specified major version will be installed.
 #' @return \code{NULL} (miniconda is installed to a system directory).
+#' @importFrom utils download.file
 #' @export
 install_miniconda <- function(version = 3) {
   ## Work in a temporary directory and move back to original wd on exit
@@ -24,17 +25,17 @@ install_miniconda <- function(version = 3) {
   success <- FALSE
   if (is_windows()) {
     inst_file <- sprintf("Miniconda%s-latest-Windows-%s.exe", version, arch)
-    download.file(paste0(base_url, inst_file), inst_file)
+    utils::download.file(paste0(base_url, inst_file), inst_file)
     # install...
     success <- TRUE
   } else if (is_osx()) {
     inst_file <- sprintf("Miniconda%s-latest-MacOSX-%s.sh", version, arch)
-    download.file(paste0(base_url, inst_file), inst_file)
+    utils::download.file(paste0(base_url, inst_file), inst_file)
     # install...
     success <- TRUE
   } else if (is_linux()) {
     inst_file <- sprintf("Miniconda%s-latest-Linux-%s.sh", version, arch)
-    download.file(paste0(base_url, inst_file), inst_file)
+    utils::download.file(paste0(base_url, inst_file), inst_file)
     # install...
     success <- TRUE
   } else {
