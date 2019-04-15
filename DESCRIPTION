@@ -10,3 +10,5 @@ Description: This package provides utilities for installing an isolated "minicon
 License: Apache License 2.0 | file LICENSE
 Encoding: UTF-8
 LazyData: true
+URL: https://github.com/hafen/rminiconda
+BugReports: https://github.com/hafen/rminiconda/issues
