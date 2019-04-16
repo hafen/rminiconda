@@ -4,10 +4,13 @@
 \alias{install_miniconda}
 \title{Install miniconda}
 \usage{
-install_miniconda(version = 3)
+install_miniconda(version = 3, path = file.path(path.expand("~"),
+  "rminiconda"))
 }
 \arguments{
 \item{version}{The major version number of Python (2 or 3). The latest version of the specified major version will be installed.}
+
+\item{path}{Where to place the miniconda installation}
 }
 \value{
 \code{NULL} (miniconda is installed to a system directory).

@@ -3,10 +3,11 @@
 #' Download the miniconda installer and run it.
 #'
 #' @param version The major version number of Python (2 or 3). The latest version of the specified major version will be installed.
+#' @param path Where to place the miniconda installation
 #' @return \code{NULL} (miniconda is installed to a system directory).
 #' @importFrom utils download.file
 #' @export
-install_miniconda <- function(version = 3) {
+install_miniconda <- function(version = 3, path = file.path(path.expand("~"), "rminiconda")) {
   ## Work in a temporary directory and move back to original wd on exit
   owd <- setwd(tempdir())
   on.exit(setwd(owd), add = TRUE)
