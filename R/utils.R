@@ -39,24 +39,28 @@ install_miniconda <- function(version = 3,
 
   if (is_windows()) {
     inst_file <- sprintf("Miniconda%s-latest-Windows-%s.exe", version, arch)
-    inst_cmd <- sprintf("start /wait \"\" %s /InstallationType=JustMe /RegisterPython=0 /S /D=%s",
-      inst_file, dest_path)
+    inst_cmd <- inst_file
+    inst_args <- sprintf(" /InstallationType=JustMe /RegisterPython=0 /S /D=%s",
+      dest_path)
   } else if (is_osx()) {
     inst_file <- sprintf("Miniconda%s-latest-MacOSX-%s.sh", version, arch)
-    inst_cmd <- sprintf("bash %s -b -p \"%s\"", inst_file, dest_path)
+    inst_cmd <- "bash"
+    inst_args <- sprintf(" %s -b -p \"%s\"", inst_file, dest_path)
   } else if (is_linux()) {
     inst_file <- sprintf("Miniconda%s-latest-Linux-%s.sh", version, arch)
-    inst_cmd <- sprintf("bash %s -b -p %s", inst_file, dest_path)
+    inst_cmd <- "bash"
+    inst_args <- sprintf(" %s -b -p %s", inst_file, dest_path)
   } else {
     # Unsupported platform, like Solaris
     message("Sorry, this platform is not supported.")
     return(invisible())
   }
-  ## Download and install
+  ## Download
   message("Installing isolated miniconda distribution...")
   message("Source: ", paste0(base_url, inst_file))
   message("Destination: ", dest_path)
-  dl_res <- utils::download.file(paste0(base_url, inst_file), inst_file)
+  dl_res <- utils::download.file(paste0(base_url, inst_file), inst_file,
+    mode = "wb")
   if (dl_res != 0 || !file.exists(inst_file))
     stop("There was an issue downloading the file\n",
       paste0(base_url, inst_file),
@@ -64,24 +68,19 @@ install_miniconda <- function(version = 3,
       "Please check your version number.",
       call. = FALSE)
 
-  message("Do you accept the Conda license?\n",
-    "  https://conda.io/en/latest/license.html (Y/n)")
-  ans <- readline()
-  if (!(ans == "Y" || ans == "")) {
-    message("Terminating installation...")
-    return(invisible(FALSE))
-  }
+  message("By installing, you accept the Conda license:")
+  message("  https://conda.io/en/latest/license.html")
 
-  ## Check installation
-  inst_res <- system(inst_cmd)
+  ## Install
+  inst_res <- system2(inst_cmd, inst_args)
   if (inst_res != 0)
     stop("There was a problem installing miniconda.", call. = FALSE)
 
+  ## Check installation
   python_bin <- find_miniconda_python(name, path)
 
-  res <- try(system(
-    paste(python_bin, " -c \"print('hello world')\""),
-    intern = TRUE), silent = TRUE)
+  res <- try(system2(python_bin, " -c \"print('hello world')\"",
+    stdout = TRUE, stderr = TRUE), silent = TRUE)
   if (res != "hello world")
     stop("Installation was not successful.", call. = FALSE)
 
@@ -116,7 +115,11 @@ get_miniconda_path <- function() {
 #' @export
 find_miniconda_python <- function(
   name = "general", path = get_miniconda_path()) {
-  normalizePath(file.path(path, name, "bin", "python"))
+  if (is_windows()) {
+    normalizePath(file.path(path, name, "python.exe"))
+  } else {
+    normalizePath(file.path(path, name, "bin", "python"))
+  }
 }
 
 #' Find the pip binary executable for an rminiconda installation
