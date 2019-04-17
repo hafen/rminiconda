@@ -2,3 +2,4 @@
 ^\.travis\.yml$
 ^.*\.Rproj$
 ^\.Rproj\.user$
+inst/rminiconda/general

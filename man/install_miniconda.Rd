@@ -4,17 +4,22 @@
 \alias{install_miniconda}
 \title{Install miniconda}
 \usage{
-install_miniconda(version = 3, path = file.path(path.expand("~"),
-  "rminiconda"))
+install_miniconda(version = 3, path = get_miniconda_path(),
+  name = "general")
 }
 \arguments{
 \item{version}{The major version number of Python (2 or 3). The latest version of the specified major version will be installed.}
 
-\item{path}{Where to place the miniconda installation}
+\item{path}{The base directory where all "rminiconda" miniconda installations are located (see \code{\link{get_miniconda_path}} for more information).}
+
+\item{name}{The name of the installation.}
 }
 \value{
 \code{NULL} (miniconda is installed to a system directory).
 }
 \description{
 Download the miniconda installer and run it.
+}
+\details{
+The \code{name} can be thought of as a project name with which to associate your miniconda installation. The miniconda installation will go in \code{{path}/{name}}. You can have different installations for different purposes.
 }

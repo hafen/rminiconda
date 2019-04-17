@@ -1,3 +1,5 @@
 .Rhistory
 .RData
 .Rproj.user
+inst/rminiconda/*
+!inst/rminiconda/README.md
