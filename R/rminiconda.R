@@ -137,7 +137,11 @@ find_miniconda_python <- function(
 #' @export
 find_miniconda_pip <- function(
   name = "general", path = get_miniconda_path()) {
-  normalizePath(file.path(path, name, "bin", "pip"))
+  if (is_windows()) {
+    normalizePath(file.path(path, name, "Scripts", "pip.exe"))
+  } else {
+    normalizePath(file.path(path, name, "bin", "pip"))
+  }
 }
 
 #' Remove an "rminiconda" miniconda installation
