@@ -56,7 +56,7 @@ install_miniconda <- function(version = 3,
     return(invisible())
   }
   ## Download
-  message("Installing isolated miniconda distribution...")
+  message("Downloading miniconda installer...")
   message("Source: ", paste0(base_url, inst_file))
   message("Destination: ", dest_path)
   dl_res <- utils::download.file(paste0(base_url, inst_file), inst_file,
@@ -72,15 +72,13 @@ install_miniconda <- function(version = 3,
   message("  https://conda.io/en/latest/license.html")
 
   ## Install
+  message("Installing isolated miniconda distribution...")
   inst_res <- system2(inst_cmd, inst_args)
   if (inst_res != 0)
     stop("There was a problem installing miniconda.", call. = FALSE)
 
   ## Check installation
-  python_bin <- find_miniconda_python(name, path)
-
-  res <- try(system2(python_bin, " -c \"print('hello world')\"",
-    stdout = TRUE, stderr = TRUE), silent = TRUE)
+  res <- test_miniconda(name)
   if (res != "hello world")
     stop("Installation was not successful.", call. = FALSE)
 
@@ -88,6 +86,17 @@ install_miniconda <- function(version = 3,
 
   message("miniconda installation successful!")
   invisible(TRUE)
+}
+
+#' Run a simple "hello world" test of a miniconda installation
+#' @param name The name of the miniconda installation.
+#' @param path The base directory where all "rminiconda" miniconda installations are located.
+#' @export
+test_miniconda <- function(name, path = get_miniconda_path()) {
+  python_bin <- find_miniconda_python(name, path)
+
+  try(system2(python_bin, " -c \"print('hello world')\"",
+    stdout = TRUE, stderr = TRUE), silent = TRUE)
 }
 
 #' Get the path for where all "rminiconda" miniconda installations are located
