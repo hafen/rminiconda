@@ -1,6 +1,5 @@
 # rminiconda
 
-[![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 [![Travis build status](https://travis-ci.org/ki-tools/rminiconda.svg?branch=master)](https://travis-ci.org/ki-tools/rminiconda)
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/ki-tools/rminiconda?branch=master&svg=true)](https://ci.appveyor.com/project/hafen/rminiconda)
 
