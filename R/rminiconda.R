@@ -166,8 +166,8 @@ remove_miniconda <- function(
     "You are about to remove the following directory:\n  ",
     pth, "\n",
     "Are you sure you want to do this? (Y/n) ")
-  ans <- readline()
-  if (ans == "Y" || ans == "") {
+  ans <- tolower(readline())
+  if (ans == "y" || ans == "") {
     message("Removing miniconda installation, '", name, "'...")
     unlink(pth, recursive = TRUE)
   }
