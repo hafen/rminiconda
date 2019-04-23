@@ -82,7 +82,8 @@ install_miniconda <- function(version = 3,
   if (res != "hello world")
     stop("Installation was not successful.", call. = FALSE)
 
-  writeLines(c(version, inst_file), file.path(dest_path, "info.txt"))
+  py_version <- get_python_version(name)
+  writeLines(c(py_version, inst_file), file.path(dest_path, "info.txt"))
 
   message("miniconda installation successful!")
   invisible(TRUE)
@@ -96,6 +97,23 @@ test_miniconda <- function(name, path = get_miniconda_path()) {
   python_bin <- find_miniconda_python(name, path)
 
   try(system2(python_bin, " -c \"print('hello world')\"",
+    stdout = TRUE, stderr = TRUE), silent = TRUE)
+}
+
+#' Get the Python version of a miniconda installation
+#' @param name The name of the miniconda installation.
+#' @param path The base directory where all "rminiconda" miniconda installations are located.
+#' @export
+get_python_version <- function(name, path = get_miniconda_path()) {
+  python_bin <- find_miniconda_python(name, path)
+  lines <- c(
+    "import sys",
+    "ver = sys.version_info",
+    "print(str(ver.major) + '.' + str(ver.minor) + '.' + str(ver.micro))"
+  )
+
+  try(system2(python_bin, paste0(
+    " -c \"", paste(lines, collapse = "; "), "\""),
     stdout = TRUE, stderr = TRUE), silent = TRUE)
 }
 
@@ -171,6 +189,24 @@ remove_miniconda <- function(
     message("Removing miniconda installation, '", name, "'...")
     unlink(pth, recursive = TRUE)
   }
+}
+
+#' List all miniconda installations
+#' @export
+list_installations <- function() {
+  path <- get_miniconda_path()
+  dirs <- list.dirs(path, recursive = FALSE)
+  if (length(dirs) == 0) {
+    message("No miniconda installations found in the rminiconda directory:\n",
+      path)
+  } else {
+    lapply(dirs, function(dr) {
+      ver <- readLines(file.path(dr, "info.txt"))[1]
+      message(paste0(basename(dr), " (Python ", ver, "):"))
+      message(paste0("  ", dr))
+    })
+  }
+  invisible()
 }
 
 is_windows <- function() .Platform$OS.type == "windows"
