@@ -149,6 +149,16 @@ find_miniconda_python <- function(
   }
 }
 
+#' Check if an rminiconda installation exists
+#' @param name The name of the miniconda installation.
+#' @param path The base directory where all "rminiconda" miniconda installations are located.
+#' @export
+is_miniconda_installed <- function(
+  name = "general", path = get_miniconda_path()) {
+  py <- suppressWarnings(find_miniconda_python(name, path))
+  file.exists(py)
+}
+
 #' Find the pip binary executable for an rminiconda installation
 #' @param name The name of the miniconda installation.
 #' @param path The base directory where all "rminiconda" miniconda installations are located.
@@ -207,6 +217,20 @@ list_installations <- function() {
     })
   }
   invisible()
+}
+
+#' Utility function to pip install a package in an rminiconda installation
+#'
+#' @param pkg_name The name of the pip package to install.
+#' @param name The name of the miniconda installation.
+#' @param args Optional string specifying additional arguments to pip, e.g. "-i https://test.pypi.org/simple/"
+#' @export
+rminiconda_pip_install <- function(pkg_name, name, args = "") {
+  pip <- find_miniconda_pip(name)
+  args <- paste0(" install ", pkg_name, " ", args)
+  res <- system2(pip, args)
+  if (res != 0)
+    warning("There was an issue installing Python module '", name, "'.")
 }
 
 is_windows <- function() .Platform$OS.type == "windows"
