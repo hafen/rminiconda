@@ -1,7 +1,7 @@
 # rminiconda
 
-[![Travis build status](https://travis-ci.org/ki-tools/rminiconda.svg?branch=master)](https://travis-ci.org/ki-tools/rminiconda)
-[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/ki-tools/rminiconda?branch=master&svg=true)](https://ci.appveyor.com/project/hafen/rminiconda)
+[![Travis build status](https://travis-ci.org/hafen/rminiconda.svg?branch=master)](https://travis-ci.org/hafen/rminiconda)
+[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/hafen/rminiconda?branch=master&svg=true)](https://ci.appveyor.com/project/hafen/rminiconda)
 
 This R package provides utilities for installing an isolated "miniconda" Python environment. It is intended mainly for use with the [reticulate](https://rstudio.github.io/reticulate/) package, with the particular use case of allowing R users to use R packages that wrap Python libraries without having to worry about maintaining a Python environment.
 
@@ -10,7 +10,7 @@ This R package provides utilities for installing an isolated "miniconda" Python 
 You can install rminiconda from github with:
 
 ``` r
-devtools::install_github("ki-tools/rminiconda")
+devtools::install_github("hafen/rminiconda")
 ```
 
 ## Example
