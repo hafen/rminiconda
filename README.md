@@ -103,4 +103,8 @@ You might have a collection of R packages that wrap Python libraries, for exampl
 
 ## Development Status
 
-I'm interested to see the general level of interest in the existence of a package such as this and welcome feedback and discussion with those who surely know more than I do in this area to help it get a "production-ready" stamp of approval. Please use [Github issues](https://github.com/hafen/rminiconda/issues) to engage.
+I'm interested to see the general level of interest in the existence of a package such as this and welcome feedback and discussion with those who know more than I do in this area to help it get a "production-ready" stamp of approval. Please use [Github issues](https://github.com/hafen/rminiconda/issues) to engage.
+
+## Acknowledgements
+
+Thanks to Andrew Elgert for discussions on approaches for Python installation.
