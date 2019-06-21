@@ -32,11 +32,11 @@ If you want to install an isolated miniconda for your own uses, you can simply c
 rminiconda::install_miniconda(name = "my_python")
 ```
 
-This will place an isolated miniconda installation in a directory called `"my_python` in a base directory that houses all miniconda installations installed through rminiconda. The base directory is determined based on the following rules:
+This will place an isolated miniconda installation in a directory called `"my_python` in a base directory that houses all miniconda installations installed through rminiconda. The base directory is determined based on the operating system:
 
-- If a system environment variable, `R_MINICONDA_PATH` exists, this will be used as the base installation directory.
-- Otherwise, if the rminiconda package directory is user-writable, this will be used as the base installation directory.
-- Otherwise, the directory `~/rminiconda` will be used as the base installation directory.
+- Windows: `%APPDATA%\rminiconda`
+- Linux: `~/.rminiconda`
+- MaxOS: `~/Library/rminiconda`
 
 You can specify for this installation to be used with reticulate with the following:
 
