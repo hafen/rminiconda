@@ -118,22 +118,38 @@ get_python_version <- function(name, path = get_miniconda_path()) {
 }
 
 #' Get the path for where all "rminiconda" miniconda installations are located
-#' @details The goal of rminiconda is to provide isolated installations of Python via miniconda that the user doesn't have to worry about. Because of this, the intention is to have a default location for the installations that it outside the user's view. By default, the path will be the installed "rminiconda" package directory, if writable by the user. If not, the "fallback" path will be a "rminiconda" directory in the user's home directory. If you would like to use a different directory for your rminiconda installations, set an environment variable \code{R_MINICONDA_PATH}.
+#' @details The goal of rminiconda is to provide isolated installations of Python via miniconda that the user doesn't have to worry about. Because of this, the intention is to have a default location for the installations that is outside the user's view.
+#'
+#' By default, the path will be the installed "rminiconda" package directory, if writable by the user. If not, the "fallback" path will be a "rminiconda" directory in the user's home directory. If you would like to use a different directory for your rminiconda installations, set an environment variable \code{R_MINICONDA_PATH}.
 #' @export
 get_miniconda_path <- function() {
-  path <- Sys.getenv("R_MINICONDA_PATH")
-  if (path != "" && dir.exists(path))
-    return (path)
+  if (is_windows()) {
+    path <- Sys.getenv("APPDATA")
+    if (path == "")
+      stop("Environment variable 'APPDATA' not set.")
+    path <- file.path(path, "rminiconda")
+    if (!dir.exists(path))
+      dir.create(path)
+    return(path)
+  }
 
-  path <- file.path(system.file(package = "rminiconda"), "rminiconda")
-  if (file.access(path, mode = 2) == 0) # writeable
-    return (path)
+  if (is_linux()) {
+    path <- file.path(path.expand("~"), ".rminiconda")
+    if (!dir.exists(path))
+      dir.create(path)
+    return(path)
+  }
 
-  path <- file.path(path.expand("~"), "rminiconda")
-  if (!dir.exists(path))
-    dir.create(path)
+  if (is_osx()) {
+    path <- file.path(path.expand("~/Library"), "rminiconda")
+    if (!dir.exists(path))
+      dir.create(path)
+    return(path)
+  }
 
-  path
+  # if (file.access(path, mode = 2) == 0) # writeable
+
+  stop("Not a supported OS.")
 }
 
 #' Find the python binary executable for an rminiconda installation
@@ -228,6 +244,20 @@ list_installations <- function() {
 rminiconda_pip_install <- function(pkg_name, name, args = "") {
   pip <- find_miniconda_pip(name)
   args <- paste0(" install ", pkg_name, " ", args)
+  res <- system2(pip, args)
+  if (res != 0)
+    warning("There was an issue installing Python module '", name, "'.")
+}
+
+#' Utility function to pip unininstall a package in an rminiconda installation
+#'
+#' @param pkg_name The name of the pip package to unininstall.
+#' @param name The name of the miniconda installation.
+#' @param args Optional string specifying additional arguments to pip
+#' @export
+rminiconda_pip_uninstall <- function(pkg_name, name, args = "") {
+  pip <- find_miniconda_pip(name)
+  args <- paste0(" uninstall ", pkg_name, " ", args)
   res <- system2(pip, args)
   if (res != 0)
     warning("There was an issue installing Python module '", name, "'.")

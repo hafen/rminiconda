@@ -10,5 +10,7 @@ get_miniconda_path()
 Get the path for where all "rminiconda" miniconda installations are located
 }
 \details{
-The goal of rminiconda is to provide isolated installations of Python via miniconda that the user doesn't have to worry about. Because of this, the intention is to have a default location for the installations that it outside the user's view. By default, the path will be the installed "rminiconda" package directory, if writable by the user. If not, the "fallback" path will be a "rminiconda" directory in the user's home directory. If you would like to use a different directory for your rminiconda installations, set an environment variable \code{R_MINICONDA_PATH}.
+The goal of rminiconda is to provide isolated installations of Python via miniconda that the user doesn't have to worry about. Because of this, the intention is to have a default location for the installations that is outside the user's view.
+
+By default, the path will be the installed "rminiconda" package directory, if writable by the user. If not, the "fallback" path will be a "rminiconda" directory in the user's home directory. If you would like to use a different directory for your rminiconda installations, set an environment variable \code{R_MINICONDA_PATH}.
 }
