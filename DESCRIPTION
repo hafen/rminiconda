@@ -10,6 +10,7 @@ Description: This package provides utilities for installing an isolated "minicon
 License: Apache License 2.0 | file LICENSE
 Encoding: UTF-8
 LazyData: true
+Imports: rappdirs
 URL: https://github.com/ki-tools/rminiconda
 BugReports: https://github.com/ki-tools/rminiconda/issues
 Suggests: 

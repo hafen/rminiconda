@@ -118,38 +118,47 @@ get_python_version <- function(name, path = get_miniconda_path()) {
 }
 
 #' Get the path for where all "rminiconda" miniconda installations are located
-#' @details The goal of rminiconda is to provide isolated installations of Python via miniconda that the user doesn't have to worry about. Because of this, the intention is to have a default location for the installations that is outside the user's view.
+#' @details The goal of rminiconda is to provide isolated installations of Python 
+#' via miniconda that the user doesn't have to worry about. Because of this, the 
+#' intention is to have a default location for the installations that is outside 
+#' the user's view.
 #'
-#' By default, the path will be the installed "rminiconda" package directory, if writable by the user. If not, the "fallback" path will be a "rminiconda" directory in the user's home directory. If you would like to use a different directory for your rminiconda installations, set an environment variable \code{R_MINICONDA_PATH}.
+#' By default, the path will be the result of [rappdirs::user_data_dir()] 
+#' if writable by the user. This will be created if it does not exist.
+#' If this path cannot be accessed, the "fallback" path will be a "rminiconda" 
+#' directory in the user's home directory. If you would like to use a specific 
+#' directory for your rminiconda installations, set an environment variable
+#' \code{R_MINICONDA_PATH}.
+#' @importFrom rappdirs user_data_dir
 #' @export
 get_miniconda_path <- function() {
-  if (is_windows()) {
-    path <- Sys.getenv("APPDATA")
-    if (path == "")
-      stop("Environment variable 'APPDATA' not set.")
-    path <- file.path(path, "rminiconda")
-    if (!dir.exists(path))
-      dir.create(path)
-    return(path)
+  
+  # try custom dir first
+  mcpath <- Sys.getenv("R_MINICONDA_PATH")
+  
+  if (mcpath != "") {
+    mcpath <- path.expand(mcpath)
+  } else { # use {rappdirs} logic
+    mcpath <- rappdirs::user_data_dir("rminiconda")  
   }
-
-  if (is_linux()) {
-    path <- file.path(path.expand("~"), ".rminiconda")
-    if (!dir.exists(path))
-      dir.create(path)
-    return(path)
+  
+  if (!file.exists(mcpath)) dir.create(mcpath, mode = "0755")
+  
+  if (file.access(mcpath, mode = 2) == 1) {
+    mcpath <- path.expand("~/rminiconda")
+    if (!file.exists(mcpath)) dir.create(mcpath, mode = "0755")
+    if (file.access(mcpath, mode = 2) == 1) {
+      stop(
+        "Cannot access or create a suitable directory for local miniconda ",
+        "installtion. Please check the R_MINICONDA_PATH environment variable ",
+        "and/or permissions on the parent directory of '",
+        rappdirs::user_data_dir("rminiconda"), "' and try again", call.=FALSE
+      )
+    }
   }
+  
+  return(mcpath)
 
-  if (is_osx()) {
-    path <- file.path(path.expand("~/Library"), "rminiconda")
-    if (!dir.exists(path))
-      dir.create(path)
-    return(path)
-  }
-
-  # if (file.access(path, mode = 2) == 0) # writeable
-
-  stop("Not a supported OS.")
 }
 
 #' Find the python binary executable for an rminiconda installation
