@@ -78,11 +78,11 @@ install_miniconda <- function(version = 3,
     stop("There was a problem installing miniconda.", call. = FALSE)
 
   ## Check installation
-  res <- test_miniconda(name)
+  res <- test_miniconda(name, path = path)
   if (res != "hello world")
     stop("Installation was not successful.", call. = FALSE)
 
-  py_version <- get_python_version(name)
+  py_version <- get_python_version(name, path = path)
   writeLines(c(py_version, inst_file), file.path(dest_path, "info.txt"))
 
   message("miniconda installation successful!")
@@ -123,6 +123,14 @@ get_python_version <- function(name, path = get_miniconda_path()) {
 #' By default, the path will be the installed "rminiconda" package directory, if writable by the user. If not, the "fallback" path will be a "rminiconda" directory in the user's home directory. If you would like to use a different directory for your rminiconda installations, set an environment variable \code{R_MINICONDA_PATH}.
 #' @export
 get_miniconda_path <- function() {
+  path <- Sys.getenv("R_MINICONDA_PATH")
+  if (path != "") {
+    path <- file.path(path)
+    if (!dir.exists(path))
+      dir.create(path)
+    return(path)
+  }
+
   if (is_windows()) {
     path <- Sys.getenv("APPDATA")
     if (path == "")
