@@ -78,11 +78,11 @@ install_miniconda <- function(version = 3,
     stop("There was a problem installing miniconda.", call. = FALSE)
 
   ## Check installation
-  res <- test_miniconda(name)
+  res <- test_miniconda(name, path = path)
   if (res != "hello world")
     stop("Installation was not successful.", call. = FALSE)
 
-  py_version <- get_python_version(name)
+  py_version <- get_python_version(name, path = path)
   writeLines(c(py_version, inst_file), file.path(dest_path, "info.txt"))
 
   message("miniconda installation successful!")
